@@ -92,6 +92,8 @@ public final class App {
         if (delivery != null) {
             delivery.assignCourier(courier);
             courier.addDelivery(delivery);
+        } else {
+            System.out.println("There are no unassigned orders right now.");
         }
     }
 

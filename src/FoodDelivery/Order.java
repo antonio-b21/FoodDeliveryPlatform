@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 class Order implements Comparable<Order>{
     private final User user;
@@ -19,7 +19,9 @@ class Order implements Comparable<Order>{
         this.user = user.copy();
         this.restaurant = restaurant.copy();
         this.placementDate = new Date(System.currentTimeMillis());
-        this.dishes = dishes.stream().map(Dish::copy).collect(Collectors.toList());
+        this.dishes = dishes.stream()
+                .map(Dish::copy)
+                .collect(Collectors.toList());
         this.total = total;
         this.courier = null;
     }
@@ -28,7 +30,9 @@ class Order implements Comparable<Order>{
         this.user = order.user.copy();
         this.restaurant = order.restaurant.copy();
         this.placementDate = new Date(order.placementDate.getTime());
-        this.dishes = order.dishes.stream().map(Dish::copy).collect(Collectors.toList());
+        this.dishes = order.dishes.stream()
+                .map(Dish::copy)
+                .collect(Collectors.toList());
         this.total = order.total;
         this.courier = order.courier == null ? null : order.courier.copy();
     }
@@ -73,12 +77,14 @@ class Order implements Comparable<Order>{
             courier = this.courier.toString();
         }
         SimpleDateFormat timeFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        AtomicInteger i = new AtomicInteger();
         return restaurant.getName() + " order from " + timeFormat.format(placementDate) + "\n" +
                 user + "\n" +
                 courier + "\n" +
-                IntStream.range(0, dishes.size())
-                        .mapToObj(i -> (i + 1) + ". " + dishes.get(i) + "\n")
-                        .collect(Collectors.joining()) +
+                dishes.stream()
+                        .map(d -> {
+                            i.addAndGet(1); return i + ". ";})
+                        .collect(Collectors.joining("\n")) + "\n" +
                 "\t Total: $" + String.format("%.2f", total);
     }
 

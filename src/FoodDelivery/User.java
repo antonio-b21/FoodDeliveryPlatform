@@ -1,10 +1,10 @@
 package FoodDelivery;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public abstract class User extends Person {
     private final String address;
@@ -13,13 +13,15 @@ public abstract class User extends Person {
     User(String name, String phoneNumber, String address) {
         super(name, phoneNumber);
         this.address = address;
-        orders = new ArrayList<>();
+        orders = new LinkedList<>();
     }
 
     protected User(User user) {
         super(user);
         this.address = user.address;
-        this.orders = user.orders.stream().map(Order::copy).collect(Collectors.toList());
+        this.orders = user.orders.stream()
+                .map(Order::copy)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     protected User(User user, boolean upgrade) {
@@ -38,9 +40,8 @@ public abstract class User extends Person {
 
     void listOrders() {
         System.out.println(super.getName() + "'s orders:");
-        IntStream.range(0, orders.size())
-                .mapToObj(i -> (i + 1) + ". " + orders.get(i).toBriefString())
-                .forEach(System.out :: println);
+        AtomicInteger i = new AtomicInteger();
+        orders.forEach(d-> { i.addAndGet(1); System.out.println(i + ". " + d.toBriefString()); });
     }
 
 

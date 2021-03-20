@@ -23,7 +23,9 @@ class PremiumUser extends User {
 
     @Override
     Order addOrder(Restaurant restaurant, List<Dish> dishes) {
-        double total = dishes.stream().mapToDouble(Dish::getPrice).sum();
+        double total = dishes.stream()
+                .mapToDouble(Dish::getPrice)
+                .sum();
         Order order = new Order(this, restaurant, dishes, total);
         orders.add(order);
         System.out.println("The delivery is free. Thank you for supporting us!");

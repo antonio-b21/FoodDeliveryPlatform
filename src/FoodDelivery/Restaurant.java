@@ -2,8 +2,8 @@ package FoodDelivery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 class Restaurant {
     private final String name;
@@ -21,7 +21,7 @@ class Restaurant {
         this.address = restaurant.address;
         this.dishes = restaurant.dishes.stream()
                 .map(Dish::copy)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     Restaurant copy() {
@@ -44,9 +44,8 @@ class Restaurant {
 
     void showMenu() {
         System.out.printf("%s's menu:\n", name);
-        IntStream.range(0, dishes.size())
-                .mapToObj(i -> (i + 1) + ". " + dishes.get(i))
-                .forEach(System.out :: println);
+        AtomicInteger i = new AtomicInteger();
+        dishes.forEach(d-> { i.addAndGet(1); System.out.println(i + ". " + d); });
     }
 
     @Override

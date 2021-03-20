@@ -21,7 +21,9 @@ class RegularUser extends User {
     @Override
     Order addOrder(Restaurant restaurant, List<Dish> dishes) {
         dishes.add(new Dish("Delivery fee", DELIVERY_FEE, ""));
-        double total = dishes.stream().mapToDouble(Dish::getPrice).sum();
+        double total = dishes.stream()
+                .mapToDouble(Dish::getPrice)
+                .sum();
         Order order = new Order(this, restaurant, dishes, total);
         orders.add(order);
         System.out.println(order);

@@ -1,28 +1,31 @@
 package FoodDelivery;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public abstract class Courier extends Person {
     private final List<Order> deliveries;
 
     Courier(String name, String phoneNumber) {
         super(name, phoneNumber);
-        deliveries = new ArrayList<>();
+        deliveries = new LinkedList<>();
     }
 
     protected Courier(Courier courier) {
         super(courier);
-        this.deliveries = courier.deliveries.stream().map(Order::copy).collect(Collectors.toList());
+        this.deliveries = courier.deliveries.stream()
+                .map(Order::copy)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     abstract Courier copy();
 
     void addDelivery(Order delivery) {
         deliveries.add(delivery);
+        System.out.println(delivery);
     }
 
     void showDelivery(int deliveryId) {
@@ -31,9 +34,8 @@ public abstract class Courier extends Person {
 
     void listDeliveries() {
         System.out.println(super.getName() + "'s deliveries:");
-        IntStream.range(0, deliveries.size())
-                .mapToObj(i -> (i + 1) + ". " + deliveries.get(i).toBriefString())
-                .forEach(System.out :: println);
+        AtomicInteger i = new AtomicInteger();
+        deliveries.forEach(d-> { i.addAndGet(1); System.out.println(i + ". " + d.toBriefString()); });
     }
 
 
