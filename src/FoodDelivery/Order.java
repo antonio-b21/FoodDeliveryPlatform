@@ -83,7 +83,7 @@ class Order implements Comparable<Order>{
                 courier + "\n" +
                 dishes.stream()
                         .map(d -> {
-                            i.addAndGet(1); return i + ". ";})
+                            i.addAndGet(1); return i + ". " + d;})
                         .collect(Collectors.joining("\n")) + "\n" +
                 "\t Total: $" + String.format("%.2f", total);
     }
