@@ -1,6 +1,7 @@
 package FoodDelivery;
 
 import java.util.*;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
 public final class App {
@@ -39,7 +40,12 @@ public final class App {
     // Users
 
     public static RegularUser createAccount(String name, String phoneNumber, String address) {
-        return new RegularUser(name, phoneNumber, address);
+        try {
+            return new RegularUser(name, phoneNumber, address);
+        } catch (PatternSyntaxException e) {
+            System.out.println(e.getDescription());
+            return null;
+        }
     }
 
     public static PremiumUser goPremium(User user) {
@@ -76,11 +82,21 @@ public final class App {
     // Couriers
 
     public static Rider registerRider(String name, String phoneNumber) {
-        return new Rider(name, phoneNumber);
+        try {
+            return new Rider(name, phoneNumber);
+        } catch (PatternSyntaxException e) {
+            System.out.println(e.getDescription());
+            return null;
+        }
     }
 
     public static Driver registerDriver(String name, String phoneNumber, String licencePlate) {
-        return new Driver(name, phoneNumber, licencePlate);
+        try {
+            return new Driver(name, phoneNumber, licencePlate);
+        } catch (PatternSyntaxException e) {
+            System.out.println(e.getDescription());
+            return null;
+        }
     }
 
     public static void showProfile(Courier courier) {
