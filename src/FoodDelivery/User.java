@@ -6,45 +6,60 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public abstract class User extends Person {
-    private final String address;
-    protected List<Order> orders;
+public class User extends Person {
+    private static int counter = 0;
+    private int id;
+    private String address;
+    private List<Order> orders;
+
+    User() { }
 
     User(String name, String phoneNumber, String address) {
         super(name, phoneNumber);
+        this.id = ++counter;
+        this.address = address;
+        orders = new LinkedList<>();
+    }
+
+    protected User(int id, String name, String phoneNumber, String address) {
+        super(name, phoneNumber);
+        this.id = ++counter;
         this.address = address;
         orders = new LinkedList<>();
     }
 
     protected User(User user) {
         super(user);
+        this.id = user.id;
         this.address = user.address;
         this.orders = user.orders.stream()
                 .map(Order::copy)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected User(User user, boolean upgrade) {
-        super(user);
-        this.address = user.address;
-        this.orders = user.orders;
+    protected int getId() {
+        return id;
     }
 
-    abstract User copy();
+    protected String getAddress() {
+        return address;
+    }
 
-    abstract Order addOrder(Restaurant restaurant, List<Dish> dishes);
+    User copy() { return new User(this); }
+
+    void addOrder(Order newOrder)  {
+        orders.add(newOrder);
+    }
 
     void showOrder(int orderId) {
         System.out.println(orders.get(orderId - 1));
     }
 
     void listOrders() {
-        System.out.println(super.getName() + "'s orders:");
+        System.out.println(getName() + "'s orders:");
         AtomicInteger i = new AtomicInteger();
         orders.forEach(d-> { i.addAndGet(1); System.out.println(i + ". " + d.toBriefString()); });
     }
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -52,17 +67,35 @@ public abstract class User extends Person {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         User user = (User) o;
-        return Objects.equals(address, user.address) &&
-                Objects.equals(orders, user.orders);
+        return getId() == user.getId()
+                && Objects.equals(getAddress(), user.getAddress())
+                && Objects.equals(orders, user.orders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), address, orders);
+        return Objects.hash(super.hashCode(), getId(), getAddress(), orders);
     }
 
     @Override
     public String toString() {
-        return "User " + super.toString() + " - " + address;
+        return super.toString() + " - " + getAddress();
+    }
+
+    String csvHeader() {
+        return "id,name,phoneNumber,address";
+    }
+
+    String csvString() {
+        return  getId() + "," + getName() + "," + getPhoneNumber() + "," + getAddress();
+    }
+
+    User csvObject(String csvString) {
+        String[] args = csvString.split(",", 4);
+        int id = Integer.parseInt(args[0]);
+        String name = args[1];
+        String phoneNumber = args[2];
+        String address = args[3];
+        return new User(id, name, phoneNumber, address);
     }
 }

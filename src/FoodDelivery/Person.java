@@ -3,9 +3,11 @@ package FoodDelivery;
 import java.util.Objects;
 import java.util.regex.PatternSyntaxException;
 
-abstract class Person {
-    private final String name;
-    private final String phoneNumber;
+abstract class Person extends CsvCompatible {
+    private String name;
+    private String phoneNumber;
+
+    Person() { }
 
     Person(String name, String phoneNumber) {
         this.name = name;
@@ -24,22 +26,26 @@ abstract class Person {
         return name;
     }
 
+    protected String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(name, person.name) &&
-                Objects.equals(phoneNumber, person.phoneNumber);
+        return Objects.equals(getName(), person.getName())
+                && Objects.equals(getPhoneNumber(), person.getPhoneNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phoneNumber);
+        return Objects.hash(getName(), getPhoneNumber());
     }
 
     @Override
     public String toString() {
-        return name + " - " + phoneNumber;
+        return getName() + " - " + getPhoneNumber();
     }
 }

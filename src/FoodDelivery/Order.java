@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 class Order implements Comparable<Order>{
+    private static final double DELIVERY_FEE = 10;
     private final User user;
     private final Restaurant restaurant;
     private final Date placementDate;
@@ -15,14 +16,17 @@ class Order implements Comparable<Order>{
     private final double total;
     private Courier courier;
 
-    Order(User user, Restaurant restaurant, List<Dish> dishes, double total) {
+    Order(User user, Restaurant restaurant, List<Dish> dishes) {
+        dishes.add(new Dish(-1, "Delivery fee", DELIVERY_FEE, ""));
         this.user = user.copy();
         this.restaurant = restaurant.copy();
         this.placementDate = new Date(System.currentTimeMillis());
         this.dishes = dishes.stream()
                 .map(Dish::copy)
                 .collect(Collectors.toList());
-        this.total = total;
+        this.total = dishes.stream()
+                .mapToDouble(Dish::getPrice)
+                .sum();
         this.courier = null;
     }
 
@@ -79,7 +83,7 @@ class Order implements Comparable<Order>{
         SimpleDateFormat timeFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         AtomicInteger i = new AtomicInteger();
         return restaurant.getName() + " order from " + timeFormat.format(placementDate) + "\n" +
-                user + "\n" +
+                "User " + user + "\n" +
                 courier + "\n" +
                 dishes.stream()
                         .map(d -> {

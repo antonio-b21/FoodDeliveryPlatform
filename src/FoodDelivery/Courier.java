@@ -7,7 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public abstract class Courier extends Person {
-    private final List<Order> deliveries;
+    private List<Order> deliveries;
+
+    Courier() { }
 
     Courier(String name, String phoneNumber) {
         super(name, phoneNumber);
@@ -51,10 +53,5 @@ public abstract class Courier extends Person {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), deliveries);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }
