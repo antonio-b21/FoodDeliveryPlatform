@@ -2,6 +2,7 @@ package FoodDelivery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,22 @@ class Restaurant extends CsvCompatible {
         System.out.printf("%s's menu:\n", getName());
         AtomicInteger i = new AtomicInteger();
         dishes.forEach(d-> { i.addAndGet(1); System.out.println(i + ". " + d); });
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurant that = (Restaurant) o;
+        return getId() == that.getId()
+                && Objects.equals(getName(), that.getName())
+                && Objects.equals(getAddress(), that.getAddress())
+                && Objects.equals(dishes, that.dishes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getAddress(), dishes);
     }
 
     @Override

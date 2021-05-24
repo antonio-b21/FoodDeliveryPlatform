@@ -1,5 +1,7 @@
 package FoodDelivery;
 
+import java.util.Objects;
+
 class Dish extends CsvCompatible {
     private static int counter = 0;
     private int id;
@@ -56,6 +58,23 @@ class Dish extends CsvCompatible {
 
     Dish copy() {
         return new Dish(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dish dish = (Dish) o;
+        return getId() == dish.getId()
+                && getRestaurantId() == dish.getRestaurantId()
+                && Double.compare(dish.getPrice(), getPrice()) == 0
+                && Objects.equals(getName(), dish.getName())
+                && Objects.equals(getIngredients(), dish.getIngredients());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getRestaurantId(), getName(), getPrice(), getIngredients());
     }
 
     @Override

@@ -12,7 +12,7 @@ class CsvWriter {
     private static CsvWriter w;
 
     static {
-        dataDir = "Proiect/data/";
+        dataDir = "data/";
         w = null;
     }
 

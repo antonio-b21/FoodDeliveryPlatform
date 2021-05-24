@@ -1,5 +1,7 @@
 package FoodDelivery;
 
+import java.util.Objects;
+
 class Driver extends Courier {
     private static int counter = 0;
     private int id;
@@ -36,6 +38,21 @@ class Driver extends Courier {
     @Override
     Driver copy() {
         return new Driver(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Driver driver = (Driver) o;
+        return getId() == driver.getId()
+                && Objects.equals(getLicencePlate(), driver.getLicencePlate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getId(), getLicencePlate());
     }
 
     @Override

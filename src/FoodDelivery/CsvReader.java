@@ -10,7 +10,7 @@ class CsvReader {
     private static CsvReader r;
 
     static {
-        dataDir = "Proiect/data/";
+        dataDir = "data/";
         r = null;
     }
 

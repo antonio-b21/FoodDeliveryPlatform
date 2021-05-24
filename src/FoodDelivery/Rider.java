@@ -1,5 +1,7 @@
 package FoodDelivery;
 
+import java.util.Objects;
+
 class Rider extends Courier {
     private static int counter = 0;
     private int id;
@@ -28,6 +30,20 @@ class Rider extends Courier {
     @Override
     Courier copy() {
         return new Rider(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Rider rider = (Rider) o;
+        return getId() == rider.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getId());
     }
 
     @Override
