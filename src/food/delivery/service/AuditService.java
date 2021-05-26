@@ -1,4 +1,4 @@
-package FoodDelivery;
+package food.delivery.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
